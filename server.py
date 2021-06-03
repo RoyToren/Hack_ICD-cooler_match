@@ -51,7 +51,7 @@ def startup():
     rgbs = df['RGB'].values
     rgbs = [rgb.split(';') for rgb in rgbs]
     rgb_names = rgb_to_name(json_url)
-    clf = train_nn_classifier(rgbs, {'n_neighbors': 3})
+    clf = train_nn_classifier(rgbs, {'n_neighbors': 10})
 
 def extract_rgb_candidate(img_gray,img_color):
     y, x = img_gray.shape
@@ -103,11 +103,14 @@ def get_results(task_id):
 
 def do_work(gray_image, color_image, results, task_id, clf):   
     candidate_rgb = extract_rgb_candidate(gray_image, color_image)
-    _, candidates = clf.kneighbors(candidate_rgb, n_neighbors=3)
-    res = rgbs[candidates[0][0]]
-    color_name = rgb_names[tuple([int(r) for r in res])]
-    color_value = np.array(res).tolist()
-    results[task_id] = {'name' : color_name, 'val': color_value}
+    _, candidates = clf.kneighbors(candidate_rgb, n_neighbors=10)
+    results[task_id] = []
+    for candidate in candidates[0]:
+        res = rgbs[candidate]
+        color_name = rgb_names[tuple([int(r) for r in res])]
+        color_value = np.array(res).tolist()
+        results[task_id].append({'name' : color_name, 'val': color_value})
+    
         
 @app.route('/api/checkColor', methods=['POST'])
 def start_task(): 

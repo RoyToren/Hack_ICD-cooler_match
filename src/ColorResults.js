@@ -31,12 +31,16 @@ export default function ColorResults(props) {
     return (
       <React.Fragment>
         <Typography variant="h6" gutterBottom>
-          The Colors We Found
+          Top Colors We Found From Best To Worst
         </Typography>
-        <Typography gutterBottom>
-        {parentProps.data.name}
-        </Typography>
-        <div className={classes.square} style={{backgroundColor: `rgb(${parentProps.data.val})`}}> </div>
+        <List disablePadding>
+        {parentProps.data.map((colors) => (
+        <ListItem className={classes.listItem}>
+          <ListItemText primary={colors.name} />          
+          <div className={classes.square} style={{backgroundColor: `rgb(${colors.val})`}}> </div>
+        </ListItem>
+        ))}
+        </List>
       </React.Fragment>
       );
   } else {

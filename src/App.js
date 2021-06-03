@@ -193,7 +193,7 @@ function App() {
                         onClick={handleNext}
                         className={classes.button}
                         disabled={isSubmit}
-                      >{activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                      >{activeStep === steps.length - 1 ? 'Done' : 'Next'}
                       </Button>}
                     </div>
                   </React.Fragment>
