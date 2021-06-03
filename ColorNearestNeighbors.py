@@ -24,10 +24,12 @@ def extract_rgb_candidate(img):
 
 def main():
     df = load_colors('RGB Color fan.csv')
-    clf = train_nn_classifier(df['RGB'], {'n_neighbors': 3})
+    rgbs = df['RGB'].values
+    rgbs = [rgb.split(';') for rgb in rgbs]
+
+    clf = train_nn_classifier(rgbs, {'n_neighbors': 3})
     rgb_img, gs_img = load_img_rgb_grayscale('img.png')
     candidate_rgb = extract_rgb_candidate(rgb_img)
-
 
     candidates = clf.kneighbors(candidate_rgb, n_neighbors=3)
     print(candidates)
