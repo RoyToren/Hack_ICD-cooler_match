@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import AddColorImages from './AddColorImages';
-import GraderResults from './GraderResults';
+import ColorResults from './ColorResults';
 import _ from 'lodash';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './App.css';
@@ -80,7 +80,7 @@ const steps = ['Upload Image', 'Result'];
 function App() {
   const [colorImages, setColorImages] = React.useState(0);
   const [isSubmit, setIsSubmit] = React.useState(0);
-  const [checkerResults, setCheckerResults] = React.useState({});
+  const [Results, setResults] = React.useState({});
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -92,7 +92,7 @@ function App() {
       case 0:
         return <AddColorImages parentCallback={AddColorImagesCallback} />;
       case 1:
-        return <GraderResults data={checkerResults}/>;
+        return <ColorResults data={Results}/>;
       default:
         throw new Error('Unknown step');
     }
@@ -123,7 +123,7 @@ function App() {
              }});
             const new_data = await res.json();
               if(new_data['status'] == 'finished'){
-                setCheckerResults(new_data['result']);
+                setResults(new_data['result']);
                 setIsSubmit(0);
                 clearInterval(currID);
                 setActiveStep(activeStep + 1);
@@ -143,12 +143,9 @@ function App() {
 
   const restartApp = () => {
     setColorImages(0);
-    setCheckerResults({});
+    setResults({});
     setActiveStep(0);
     setIsSubmit(0);
-  };
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
   };
 
   return (
@@ -190,11 +187,6 @@ function App() {
                   <React.Fragment>
                     {getStepContent(activeStep)}
                     <div className={classes.buttons}>
-                      {activeStep !== 0 && activeStep !== 2 && (
-                        <Button onClick={handleBack} className={classes.button} disabled={isSubmit}>
-                          Back
-                        </Button>
-                      )}
                       { isSubmit ? <CircularProgress className={classes.progress}/> : <Button
                         variant="contained"
                         color="primary"
