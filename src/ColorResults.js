@@ -17,6 +17,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(2),
   },
+  square: {
+    width: '100px',
+    height: '100px',
+    display: 'inline-flex'
+  }
 }));
 export default function ColorResults(props) {
   const classes = useStyles();
@@ -28,7 +33,8 @@ export default function ColorResults(props) {
               <Typography variant="h6" gutterBottom>
           The Colors We Found
         </Typography>
-        {parentProps.data}
+        <div className={classes.square} style={{backgroundColor: `rgb(${parentProps.data})`}}> </div>
+
       </React.Fragment>
       );
   } else {

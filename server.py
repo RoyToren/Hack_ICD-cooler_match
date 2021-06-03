@@ -82,7 +82,7 @@ def get_results(task_id):
         return jsonify({'status': 'running'})
     try:
         tasks[task_id].join()
-        return jsonify({'status': 'finished', 'result': jsonify({'color': results[task_id]})})
+        return jsonify({'status': 'finished', 'result': results[task_id]})
     except RuntimeError:
         return jsonify({'status': 'not started'})
 
@@ -90,7 +90,7 @@ def do_work(gray_image, color_image, results, task_id, clf):
     candidate_rgb = extract_rgb_candidate(gray_image, color_image)
     _, candidates = clf.kneighbors(candidate_rgb, n_neighbors=3)
     res = rgbs[candidates[0][0]]
-    results[task_id] = res
+    results[task_id] = np.array(res).tolist()
         
 @app.route('/api/checkColor', methods=['POST'])
 def start_task(): 
