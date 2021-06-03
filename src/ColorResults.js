@@ -30,11 +30,13 @@ export default function ColorResults(props) {
   {
     return (
       <React.Fragment>
-              <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom>
           The Colors We Found
         </Typography>
-        <div className={classes.square} style={{backgroundColor: `rgb(${parentProps.data})`}}> </div>
-
+        <Typography gutterBottom>
+        {parentProps.data.name}
+        </Typography>
+        <div className={classes.square} style={{backgroundColor: `rgb(${parentProps.data.val})`}}> </div>
       </React.Fragment>
       );
   } else {

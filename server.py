@@ -17,25 +17,40 @@ def load_colors(colors_file):
     df = pd.read_csv(colors_file)
     return df[['hue name', 'RGB']]
 
-
 def train_nn_classifier(rgb_vectors, params):
     nbrs = NearestNeighbors(**params)
     return nbrs.fit(rgb_vectors)
 
+
+def rgb_to_name(colors_file):
+    df = pd.read_csv(colors_file)
+    rgb_name_dict = dict(zip(df['RGB'], df['hue name']))
+    # return dict(zip(df['RGB'], df['hue name']))
+    ret = {}
+    for k, v in rgb_name_dict.items():
+        ret[convert_to_tuple(k)] = v
+    return ret
+
+def convert_to_tuple(rgb):
+    _rgb = tuple(int(x) for x in rgb.split(';'))
+    return _rgb
+
 app = Flask(__name__, static_folder='./build', static_url_path='/')
 tasks = {}
 results = {}
-global clf, rgbs
+global clf, rgbs, rgb_names
 clf = {}
 rgbs = {}
+rgb_names = {}
 @app.before_first_request
 def startup():
-    global clf, rgbs
+    global clf, rgbs, rgb_names
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
     json_url = os.path.join(SITE_ROOT, 'public', 'RGB_Color_fan.csv')
     df = load_colors(json_url)
     rgbs = df['RGB'].values
     rgbs = [rgb.split(';') for rgb in rgbs]
+    rgb_names = rgb_to_name(json_url)
     clf = train_nn_classifier(rgbs, {'n_neighbors': 3})
 
 def extract_rgb_candidate(img_gray,img_color):
@@ -90,7 +105,9 @@ def do_work(gray_image, color_image, results, task_id, clf):
     candidate_rgb = extract_rgb_candidate(gray_image, color_image)
     _, candidates = clf.kneighbors(candidate_rgb, n_neighbors=3)
     res = rgbs[candidates[0][0]]
-    results[task_id] = np.array(res).tolist()
+    color_name = rgb_names[tuple([int(r) for r in res])]
+    color_value = np.array(res).tolist()
+    results[task_id] = {'name' : color_name, 'val': color_value}
         
 @app.route('/api/checkColor', methods=['POST'])
 def start_task(): 
