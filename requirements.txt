@@ -83,7 +83,6 @@ Pillow==8.2.0
 prometheus-client==0.8.0
 prompt-toolkit==3.0.8
 prov==2.0.0
-py2exe==0.10.2.1
 pycparser==2.20
 pydot==1.4.1
 Pygments==2.9.0
