@@ -12,6 +12,7 @@ import base64
 import random
 from sklearn.neighbors import NearestNeighbors
 import pandas as pd
+from scipy.special import softmax
 
 def load_colors(colors_file):
     df = pd.read_csv(colors_file)
@@ -52,6 +53,11 @@ def startup():
     rgbs = [rgb.split(';') for rgb in rgbs]
     rgb_names = rgb_to_name(json_url)
     clf = train_nn_classifier(rgbs, {'n_neighbors': 10})
+
+
+def distances_to_probabilities(distances):
+    inv_ds = [1 / d for d in distances]
+    return softmax(inv_ds)
 
 def extract_rgb_candidate(img_gray,img_color):
     y, x = img_gray.shape
