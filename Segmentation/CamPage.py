@@ -3,9 +3,6 @@ import cv2
 import PIL
 from PIL import Image, ImageTk
 import time
-from mediator import process_click
-from tkinter.messagebox import showinfo
-from tkinter import ttk
 import pyautogui
 from mediator import process_click
 
