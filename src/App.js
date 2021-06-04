@@ -15,6 +15,9 @@ import ColorResults from './ColorResults';
 import _ from 'lodash';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './App.css';
+import Divider from '@material-ui/core/Divider';
+import { List, ListItem } from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -200,6 +203,19 @@ function App() {
                 )}
               { isSubmit ? <span>Searching our catalogue 🔎</span> : null} 
             </React.Fragment>
+            <Divider className={classes.divider}/>
+            <h3>How to get the best match:</h3>
+            <List >
+              <ListItem className={classes.listItem}>
+              <span>1) The desired color should be at the center of the image</span>
+              </ListItem>
+              <ListItem className={classes.listItem}>
+              <span>2) Use flash when taking pictures, unless the surface color is close to white</span>
+              </ListItem>
+              <ListItem className={classes.listItem}>
+              <span>3) Take the picture 15 centimeters away from the surface </span>
+              </ListItem>
+            </List>
           </Paper>
         </main>
         <footer className={classes.footer}>

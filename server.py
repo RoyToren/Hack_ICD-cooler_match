@@ -52,11 +52,11 @@ def startup():
     rgbs = df['RGB'].values
     rgbs = [rgb.split(';') for rgb in rgbs]
     rgb_names = rgb_to_name(json_url)
-    clf = train_nn_classifier(rgbs, {'n_neighbors': 10})
+    clf = train_nn_classifier(rgbs, {'n_neighbors': 5})
 
 
 def distances_to_probabilities(distances):
-    inv_ds = [1 / d for d in distances]
+    inv_ds = [-1 * d for d in distances]
     return softmax(inv_ds)
 
 def extract_rgb_candidate(img_gray,img_color):
@@ -109,13 +109,16 @@ def get_results(task_id):
 
 def do_work(gray_image, color_image, results, task_id, clf):   
     candidate_rgb = extract_rgb_candidate(gray_image, color_image)
-    _, candidates = clf.kneighbors(candidate_rgb, n_neighbors=10)
+    distances, candidates = clf.kneighbors(candidate_rgb, n_neighbors=5)
+    percentages = distances_to_probabilities(distances[0])
     results[task_id] = []
-    for candidate in candidates[0]:
-        res = rgbs[candidate]
-        color_name = rgb_names[tuple([int(r) for r in res])]
-        color_value = np.array(res).tolist()
-        results[task_id].append({'name' : color_name, 'val': color_value})
+    for i in range(len(candidates[0])):
+        percent = round(percentages[i],4)
+        if percent > 0.05:
+            res = rgbs[candidates[0][i]]
+            color_name = rgb_names[tuple([int(r) for r in res])]
+            color_value = np.array(res).tolist()
+            results[task_id].append({'name' : color_name, 'val': color_value, 'percentage': round(percentages[i],4)})
     
         
 @app.route('/api/checkColor', methods=['POST'])

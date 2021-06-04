@@ -36,7 +36,7 @@ export default function ColorResults(props) {
         <List disablePadding>
         {parentProps.data.map((colors) => (
         <ListItem className={classes.listItem}>
-          <ListItemText primary={colors.name} />          
+          <ListItemText primary={colors.name} secondary={`${colors.percentage * 100}%`} />          
           <div className={classes.square} style={{backgroundColor: `rgb(${colors.val})`}}> </div>
         </ListItem>
         ))}
